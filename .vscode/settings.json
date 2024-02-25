@@ -1,0 +1,10 @@
+{
+    "C_Cpp.errorSquiggles": "disabled",
+    "files.associations": {
+        "chrono": "c",
+        "cmath": "cpp",
+        "experementalcolor.h": "c",
+        "includes.h": "c"
+    },
+    "C_Cpp.default.compilerPath": ""
+}
