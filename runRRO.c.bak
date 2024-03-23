@@ -4,7 +4,8 @@
 #include "include/includes.h"
 
 task main(){
-    changePosGrabberC(10, 500);
-    waitGrabberC();
-    //sleep(3000);
+	motor[motorA] = 100;
+	sleep(1000);
+	flushButtonMessages();
+	waitForButtonPress();
 }

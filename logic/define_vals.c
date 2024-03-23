@@ -1,0 +1,1 @@
+#define RUN_ONLY_TEST_FUNCTION 0

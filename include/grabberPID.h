@@ -7,6 +7,10 @@ typedef struct {
     float maxV;
     float targetPos;
     float upForTakeFromShip;
+
+    float stopWorkAt;
+    bool keepWorking;
+    bool idle;
 } tGrabberPositionC;
 
 typedef struct {
@@ -16,13 +20,14 @@ typedef struct {
     float openMin;
     float maxV;
     float targetPos;
+
+    float stopWorkAt;
+    bool keepWorking;
+    bool idle;
 } tGrabberPositionD;
 
 tGrabberPositionC grabberC;
 tGrabberPositionD grabberD;
-
-bool WORKING_GRABBER_C = false;
-bool WORKING_GRABBER_D = false;
 
 task initGrabber() {
     motor[motorC] = 100;
@@ -73,6 +78,7 @@ task initGrabber_t() {
 }
 
 task thr_changePosGrabberC() {
+    grabberC.idle = false;
     float ce, cee, cP, cD, cU;
     float cisum = 0;
     float ckp = 2;
@@ -80,7 +86,7 @@ task thr_changePosGrabberC() {
     float cki = 0.004;
     cee = 0;
     float ctt = nPgmTime;
-    while (nPgmTime - ctt < 5000) {
+    while (nPgmTime < grabberC.stopWorkAt && grabberC.keepWorking) {
         ce = grabberC.targetPos - nMotorEncoder[motorC];
 
         if (ce == 0) {
@@ -109,11 +115,12 @@ task thr_changePosGrabberC() {
     }
     setMotorBrakeMode(motorC, motorBrake);
     motor[motorC] = 0;
-    WORKING_GRABBER_C = false;
+    grabberC.idle = true;
     stopTask(thr_changePosGrabberC);
 }
 
 task thr_changePosGrabberD() {
+    grabberD.idle = false;
     float de, dee, dP, dD, dU;
     float disum = 0;
     float dkp = 2;
@@ -121,7 +128,7 @@ task thr_changePosGrabberD() {
     float dki = 0.004;
     dee = 0;
     float dtt = nPgmTime;
-    while (nPgmTime - dtt < 5000) {
+    while (nPgmTime < grabberD.stopWorkAt && grabberD.keepWorking) {
         de = grabberD.targetPos - nMotorEncoder[motorD];
         if (de == 0) {
             disum = 0;
@@ -149,31 +156,41 @@ task thr_changePosGrabberD() {
         setMotorBrakeMode(motorD, motorBrake);
         motor[motorD] = 0;
     }
-    WORKING_GRABBER_D = false;
+    grabberD.idle = true;
     stopTask(thr_changePosGrabberD);
 }
-void changePosGrabberC(float v, float pos) {
+void changePosGrabberC(float v, float pos, float duration = 5000) {
     grabberC.maxV = v;
     grabberC.targetPos = pos;
-    WORKING_GRABBER_C = true;
+    grabberC.stopWorkAt = nPgmTime + duration;
+    grabberC.keepWorking = true;
     startTask(thr_changePosGrabberC, kLowPriority);
 }
 
-void waitGrabberC() {
-    while (WORKING_GRABBER_C) {
-        sleep(1);
-    }
-}
-
-void changePosGrabberD(float v, float pos) {
+void changePosGrabberD(float v, float pos, float duration = 5000) {
     grabberD.maxV = v;
     grabberD.targetPos = pos;
-    WORKING_GRABBER_D = true;
+    grabberD.stopWorkAt = nPgmTime + duration;
+    grabberD.keepWorking = true;
     startTask(thr_changePosGrabberD, kLowPriority);
 }
 
+void stopGrabberC() {
+    grabberC.keepWorking = false;
+}
+
+void stopGrabberD() {
+    grabberD.keepWorking = false;
+}
+
+void waitGrabberC() {
+    while (!grabberC.idle) {
+        sleep(70);
+    }
+}
+
 void waitGrabberD() {
-    while (WORKING_GRABBER_D) {
-        sleep(1);
+    while (!grabberD.idle) {
+        sleep(70);
     }
 }
