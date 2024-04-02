@@ -9,20 +9,12 @@ tCDValues CDSensor4, CDSensor3, CDSensor1, CDSensor2;
 
 void colorDetectInit() {
     CDSensor1.nDeviceIndex = S1;
-    CDSensor1.minRed = 0;
-    CDSensor1.maxRed = 156;
-    CDSensor1.minGreen = 0;
-    CDSensor1.maxGreen = 192;
-    CDSensor1.minBlue = 0;
-    CDSensor1.maxBlue = 136;
+    CDSensor1.minAmbient = 2400;
+    CDSensor1.maxAmbient = 1700;
 
     CDSensor2.nDeviceIndex = S2;
-    CDSensor2.minRed = 0;
-    CDSensor2.maxRed = 346;
-    CDSensor2.minGreen = 0;
-    CDSensor2.maxGreen = 309;
-    CDSensor2.minBlue = 0;
-    CDSensor2.maxBlue = 341; // change HT values
+    CDSensor2.minAmbient = 2412;
+    CDSensor2.maxAmbient = 1632;
 
     CDSensor3.nDeviceIndex = S3;
     CDSensor3.minRed = 0;
@@ -43,15 +35,18 @@ void colorDetectInit() {
 }
 
 void getCDValues(tCDValues *CDSensor) {
-    if (SensorType[CDSensor->nDeviceIndex] != 40) {
+    if (SensorType[CDSensor->nDeviceIndex] == 93) {
+        // this is ev3 color sensor
         getColorRawRGB(CDSensor->nDeviceIndex, CDSensor->rawRed, CDSensor->rawGreen,
                    CDSensor->rawBlue);
     }
     else {
-        readHTrgb(CDSensor);
+        // this is nxt ambient light sensor
+        CDSensor->ambient = sensorRaw[CDSensor->nDeviceIndex];
     }
 
     #ifdef CALIBRATION
+    if (SensorType[CDSensor->nDeviceIndex] == 93) {
         CDSensor->normRed = 1;
         CDSensor->normGreen = 1;
         CDSensor->normBlue = 1;
@@ -70,21 +65,30 @@ void getCDValues(tCDValues *CDSensor) {
         CDSensor->normBlue = (float)(CDSensor->rawBlue - CDSensor->minBlue) /
                             (CDSensor->maxBlue - CDSensor->minBlue) * 255;
         }
-
+    }
+    // calibration mode for nxt light sensor is need to be added
     #endif
-
+    
     #ifndef CALIBRATION
+    if (SensorType[CDSensor->nDeviceIndex] == 93) {
         CDSensor->normRed = (float)(CDSensor->rawRed - CDSensor->minRed) /
                             (CDSensor->maxRed - CDSensor->minRed) * 255;
         CDSensor->normGreen = (float)(CDSensor->rawGreen - CDSensor->minGreen) /
                             (CDSensor->maxGreen - CDSensor->minGreen) * 255;
         CDSensor->normBlue = (float)(CDSensor->rawBlue - CDSensor->minBlue) /
                             (CDSensor->maxBlue - CDSensor->minBlue) * 255;
+    } else {
+        CDSensor->normAmbient = (float)(CDSensor->ambient - CDSensor->minAmbient) /
+                            (CDSensor->maxAmbient - CDSensor->minAmbient) * 100;
+    }
     #endif
 
     RGBtoHSV(CDSensor->normRed, CDSensor->normGreen, CDSensor->normBlue,
              &(CDSensor->hue), &(CDSensor->sat), &(CDSensor->val));
 
+    if (SensorType[CDSensor->nDeviceIndex] != 93) {
+        return;
+    }
     #ifdef DEBUG_HSV
         displayCenteredTextLine(2, "hue: %f", CDSensor->hue);
         displayCenteredTextLine(4, "sat: %f", CDSensor->sat);
@@ -153,28 +157,34 @@ void displayValues(tCDValues *CDSensor) {
     setSoundVolume(5);
     while (1){
         getCDValues(CDSensor);
-        displayCenteredTextLine(1, "RGB_raw: %d %d %d", CDSensor->rawRed,
-                                CDSensor->rawGreen, CDSensor->rawBlue);
-        displayCenteredTextLine(3, "RGB_norm: %d %d %d", CDSensor->normRed,
-                                CDSensor->normGreen, CDSensor->normBlue);
-        displayCenteredTextLine(5, "HSV: %f %f %f", CDSensor->hue,
-                                CDSensor->sat, CDSensor->val);
-        displayBigStringAt(125, 20, "%d", CDSensor->color);
-        clearSounds();
-        if (CDSensor->color == 1) {
-            playSoundFile("Right");
-        } else if (CDSensor->color == 2) {
-            playSoundFile("Yellow");
-        } else if (CDSensor->color == 3) {
-            playSoundFile("Green");
-        } else if (CDSensor->color == 4) {
-            playSoundFile("Blue");
-        } else if (CDSensor->color == 5) {
-            playSoundFile("Black");
-        } else if (CDSensor->color == 6) {
-            playSoundFile("White");
+        if (SensorType[CDSensor->nDeviceIndex] != 93) {
+            // this is nxt light sensor
+            displayCenteredTextLine(1, "Ambient: %d", CDSensor->ambient);
+            displayCenteredTextLine(3, "Norm Ambient: %f", CDSensor->normAmbient);
         } else {
-            playSoundFile("Uh-oh");
+            displayCenteredTextLine(1, "RGB_raw: %d %d %d", CDSensor->rawRed,
+                                    CDSensor->rawGreen, CDSensor->rawBlue);
+            displayCenteredTextLine(3, "RGB_norm: %d %d %d", CDSensor->normRed,
+                                    CDSensor->normGreen, CDSensor->normBlue);
+            displayCenteredTextLine(5, "HSV: %f %f %f", CDSensor->hue,
+                                    CDSensor->sat, CDSensor->val);
+            displayBigStringAt(125, 20, "%d", CDSensor->color);
+            clearSounds();
+            if (CDSensor->color == 1) {
+                playSoundFile("Right");
+            } else if (CDSensor->color == 2) {
+                playSoundFile("Yellow");
+            } else if (CDSensor->color == 3) {
+                playSoundFile("Green");
+            } else if (CDSensor->color == 4) {
+                playSoundFile("Blue");
+            } else if (CDSensor->color == 5) {
+                playSoundFile("Black");
+            } else if (CDSensor->color == 6) {
+                playSoundFile("White");
+            } else {
+                playSoundFile("Uh-oh");
+            }
         }
         sleep(400);
         eraseDisplay();

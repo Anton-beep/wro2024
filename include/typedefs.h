@@ -7,6 +7,11 @@ typedef struct {
     tSensors nDeviceIndex;
     tHTCS2 HTStruct;
 
+    int minAmbient;
+    int maxAmbient;
+    int ambient;
+    float normAmbient;
+
     long rawRed;
     long rawGreen;
     long rawBlue;

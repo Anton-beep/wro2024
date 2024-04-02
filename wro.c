@@ -19,10 +19,15 @@ task main()
 	motor[motorB] = 0;
 	motor[motorC] = 0;
 	motor[motorD] = 0;
+	setMotorBrakeMode(motorA, motorCoast);
+	setMotorBrakeMode(motorB, motorCoast);
 	int r, g, b;
 	getColorRawRGB(S3, r, g, b);
 	getColorRawRGB(S4, r, g, b);
 	sleep(200);
+
+	initAll();
+	setSoundVolume(1);
 
 	// ??????N????±?????°N?N? N?????N??°N???N?N? ??N??µ??N? ??????N??°?»???·?°N?????
 
@@ -40,6 +45,7 @@ task main()
 	defineForLogic();
 
 	defineMain();
+	setLEDColor(ledOff);
 
 #if RUN_ONLY_TEST_FUNCTION == 1
 	testFunc();
@@ -51,6 +57,6 @@ task main()
 	eraseDisplay();
 	displayCenteredBigTextLine(5, "seconds");
 	displayCenteredBigTextLine(10, "%f", (float)(nPgmTime - startExecution) / 1000);
-	flushButtonMessages();
-	waitForButtonPress();
+		flushButtonMessages();
+		waitForButtonPress();
 }

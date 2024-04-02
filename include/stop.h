@@ -59,11 +59,6 @@ task stopB_task {
 }
 
 void stopMove(int delayMsec = 0, bool reset = false, bool mode = true) {
-    startTask(stopA_task, kLowPriority);
-    startTask(stopB_task, kLowPriority);
-
-    sleep(delayMsec);
-
     if (reset) {
         resetMotorEncoder(motorA);
         resetMotorEncoder(motorB);
@@ -72,4 +67,8 @@ void stopMove(int delayMsec = 0, bool reset = false, bool mode = true) {
         MTVarsA.targetV = 0;
         MTVarsB.targetV = 0;
     }
+    startTask(stopA_task, kLowPriority);
+    startTask(stopB_task, kLowPriority);
+
+    sleep(delayMsec);
 }

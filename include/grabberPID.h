@@ -8,6 +8,9 @@ typedef struct {
     float targetPos;
     float upForTakeFromShip;
 
+    int opened;
+    int closed;
+
     float stopWorkAt;
     bool keepWorking;
     bool idle;
@@ -21,6 +24,18 @@ typedef struct {
     float maxV;
     float targetPos;
 
+    int readyFor2;
+    int readyFor4;
+    int startSuspension;
+    int suspensionForStartBridge;
+    int suspensionMovingBridge;
+    int suspensionBridgePeak;
+    int suspensionMovingFromPeak;
+    int suspensionGoBackFromBridge;
+    int suspenionPeakGoBack;
+    int suspenionGoBackAfterPeak;
+    int endSuspension;
+
     float stopWorkAt;
     bool keepWorking;
     bool idle;
@@ -30,10 +45,13 @@ tGrabberPositionC grabberC;
 tGrabberPositionD grabberD;
 
 task initGrabber() {
-    motor[motorC] = 100;
-    motor[motorD] = -100;
-    sleep(100);
+    motor[motorC] = -30;
+    motor[motorD] = 40;
+    sleep(500);
 
+    setMotorBrakeMode(motorC, motorCoast);
+    setMotorBrakeMode(motorD, motorCoast);
+    sleep(600);
     setMotorBrakeMode(motorC, motorBrake);
     setMotorBrakeMode(motorD, motorBrake);
     motor[motorC] = 0;
@@ -47,9 +65,24 @@ task initGrabber() {
     grabberC.upForDrop = -670;
     grabberC.upForTakeFromShip = -690;
 
+    grabberC.opened = 0;
+    grabberC.closed = 373;
+
     grabberD.close = 0;
     grabberD.openMin = 230;
     grabberD.openMax = 480;
+
+    grabberD.readyFor2 = 0;
+    grabberD.readyFor4 = -45;
+    grabberD.startSuspension = -110;
+    grabberD.suspensionForStartBridge = -90;
+    grabberD.suspensionMovingBridge = -85;
+    grabberD.suspensionBridgePeak = -100;
+    grabberD.suspensionMovingFromPeak = -110;
+    grabberD.suspensionGoBackFromBridge = -141;
+    grabberD.suspenionPeakGoBack = -80;
+    grabberD.suspenionGoBackAfterPeak = -80;
+    grabberD.endSuspension = -141;
     stopTask(initGrabber);
 }
 

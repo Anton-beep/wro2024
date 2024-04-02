@@ -1,6 +1,6 @@
-const float g_ArcKP = 4;
-const float g_ArcKD = 6;
-const float g_ArcKI = 0.03;
+const float g_ArcKP = 2;
+const float g_ArcKD = 5;
+const float g_ArcKI = 0.045;
 
 bool checkEncForArc(float startVA, float startVB, float encA, float encB,
                     float enc) {
@@ -16,6 +16,13 @@ bool checkEncForArc(float startVA, float startVB, float encA, float encB,
 
 void arcEnc(float startVA, float startVB, float topVX, float stopVX, float enc,
             float boost = gBoost) {
+    // startVA - start speed of motor A
+    // startVB - start speed of motor B
+    // topVX - top speed of motors
+    // stopVX - stop speed of motors
+    // enc - distance to move
+    // boost - acceleration coefficient
+
     setMotorBrakeMode(motorA, motorCoast);
     setMotorBrakeMode(motorB, motorCoast);
 

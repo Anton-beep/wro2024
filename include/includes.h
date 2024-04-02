@@ -16,6 +16,8 @@ bool motorBstop = false;
 #include "logs.h"
 #include "async.h"
 #include "templatesDop.h"
+#include "PID_c_manip.c"
+#include "syncVoltage.c"
 
 void initAll(){
     setMotorBrakeMode(motorA, motorCoast);
@@ -34,9 +36,10 @@ void initAll(){
     setMotorBrakeMode(motorC, motorBrake);
     setMotorBrakeMode(motorD, motorBrake);
 
-	initSensor(&CDSensor3, HTCS2_MODE_ACTIVE);
-	initSensor(&CDSensor4, HTCS2_MODE_ACTIVE);
-    startTask(initGrabber, kLowPriority);
-    setLEDColor(ledOff);
-	setSoundVolume(100);
+	// initSensor(&CDSensor3, HTCS2_MODE_ACTIVE);
+	// initSensor(&CDSensor4, HTCS2_MODE_ACTIVE);
+    // startTask(initGrabber, kLowPriority);
+    initManip();
+    // setLEDColor(ledOff);
+	// setSoundVolume(100);
 }
