@@ -40,10 +40,13 @@ float mapping(float raw, float min, float max, float normMin, float normMax) {
 }
 
 float angleToEnc(float vB, float vC, float angle) {
+    eraseDisplay();
+    displayCenteredTextLine(2, "vB: %f", vB);
+    displayCenteredTextLine(4, "vC: %f", vC);
     return angle / 180 * PI * g_wheelBase *
            (vB == 0 || vC == 0
                 ? 1
-                : (1 / fabs(-vB / vC - 1) + 1 / fabs(-vC / vB - 1)) / 2.);
+                : (1 / fabs(vB / vC - 1) + 1 / fabs(vC / vB - 1)) / 2.);
 }
 
 void waitTask(bool *taskFlag){

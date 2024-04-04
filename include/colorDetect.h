@@ -9,12 +9,12 @@ tCDValues CDSensor4, CDSensor3, CDSensor1, CDSensor2;
 
 void colorDetectInit() {
     CDSensor1.nDeviceIndex = S1;
-    CDSensor1.minAmbient = 2400;
-    CDSensor1.maxAmbient = 1700;
+    CDSensor1.minAmbient = 2480;
+    CDSensor1.maxAmbient = 1640;
 
     CDSensor2.nDeviceIndex = S2;
-    CDSensor2.minAmbient = 2412;
-    CDSensor2.maxAmbient = 1632;
+    CDSensor2.minAmbient = 2504;
+    CDSensor2.maxAmbient = 1740;
 
     CDSensor3.nDeviceIndex = S3;
     CDSensor3.minRed = 0;
@@ -155,12 +155,24 @@ void displayValues(tCDValues *CDSensor) {
     setMotorBrakeMode(motorC, motorCoast);
     setMotorBrakeMode(motorD, motorCoast);
     setSoundVolume(5);
+
+    getCDValues(CDSensor);
+    int minAmbient = CDSensor->ambient;
+    int maxAmbient = CDSensor->ambient;
     while (1){
         getCDValues(CDSensor);
         if (SensorType[CDSensor->nDeviceIndex] != 93) {
             // this is nxt light sensor
             displayCenteredTextLine(1, "Ambient: %d", CDSensor->ambient);
             displayCenteredTextLine(3, "Norm Ambient: %f", CDSensor->normAmbient);
+            if (CDSensor->ambient < minAmbient) {
+                minAmbient = CDSensor->ambient;
+            }
+            if (CDSensor->ambient > maxAmbient) {
+                maxAmbient = CDSensor->ambient;
+            }
+            displayCenteredTextLine(5, "Min Ambient: %d", minAmbient);
+            displayCenteredTextLine(7, "Max Ambient: %d", maxAmbient);
         } else {
             displayCenteredTextLine(1, "RGB_raw: %d %d %d", CDSensor->rawRed,
                                     CDSensor->rawGreen, CDSensor->rawBlue);

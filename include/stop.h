@@ -1,6 +1,8 @@
-const float stopKP = 4;
-const float stopKI = 0.06;
-const float stopKD = 6;
+#include "syncVoltage.c"
+
+const float stopKP = 5;
+const float stopKI = 0.05;
+const float stopKD = 9;
 
 task stopA_task {
     float u, e, ee = 0, isum = 0;
@@ -23,7 +25,7 @@ task stopA_task {
         curErrIdx = (curErrIdx + 1) % errSz;
 
         u = e * stopKP + isum * stopKI + (e - ee) * stopKD;
-        motor[motorA] = -u;
+        setMotorA(-u);
         ee = e;
         sleep(1);
     }
@@ -50,7 +52,7 @@ task stopB_task {
         isum += err[nwErrIdx];
         curErrIdx = (curErrIdx + 1) % errSz;
         u = e * stopKP + isum * stopKI + (e - ee) * stopKD;
-        motor[motorB] = -u;
+        setMotorB(-u);
         ee = e;
         sleep(1);
     }

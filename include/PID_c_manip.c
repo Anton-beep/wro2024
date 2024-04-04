@@ -12,6 +12,7 @@ typedef struct {
 } ConstsManipC;
 
 typedef struct {
+    int holdCubes;
     int readyFor2;
     int readyFor4;
     int startSuspension;
@@ -32,7 +33,7 @@ typedef struct {
 ConstsManipC constsManipC;
 ConstsManipD constsManipD;
 
-void initManip() {
+task initManip() {
     motor[motorC] = -40;
     motor[motorD] = -40;
     sleep(400);
@@ -50,7 +51,8 @@ void initManip() {
     constsManipC.opened = 0;
     constsManipC.closed = 373;
 
-    constsManipD.readyFor2 = 0;
+    constsManipD.holdCubes = 100;
+    constsManipD.readyFor2 = 120;
     constsManipD.readyFor4 = 188;
     constsManipD.startSuspension = 190;
     constsManipD.suspensionForStartBridge = 250;
@@ -61,8 +63,8 @@ void initManip() {
     constsManipD.suspenionGoBackAfterPeak = 80;
     constsManipD.endSuspension = 520;
 
-    constsManipD.suspensionOverObstacles1Part = 250;
-    constsManipD.suspensionOverObstacles = 302;
+    constsManipD.suspensionOverObstacles1Part = 280;
+    constsManipD.suspensionOverObstacles = 345;
     constsManipD.suspensionOverObstaclesBack = 290;
 }
 
@@ -202,7 +204,7 @@ int TIME_MANIP_C_TIME;
 
 task moveTimeManipC()
 {
-    setPowerAdjustBatteryManipD(TIME_MANIP_C_START_POW, TIME_MANIP_C_VOLTAGE);
+    setPowerAdjustBatteryManipC(TIME_MANIP_C_START_POW, TIME_MANIP_C_VOLTAGE);
     sleep(TIME_MANIP_C_TIME);
     setPowerAdjustBatteryManipC(TIME_MANIP_C_AFTER_POW, TIME_MANIP_C_VOLTAGE);
     MANIP_C_READY = true;

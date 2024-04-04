@@ -1,11 +1,13 @@
+#include "syncVoltage.c"
+
 // Вроде как не имеет смысла, просто перменные 
 float kpNow = 0.55;
 float kdNow = 6;
 float kiNow = 0.002;
 
 // Обычное движение по двум датчикам
-const float kpConstBase = 0.7;
-const float kdConstBase = 15;
+const float kpConstBase = 0.75;
+const float kdConstBase = 16;
 const float kiConstBase = 0.001;
 
 // Движение по одному датчику
@@ -63,7 +65,7 @@ void countValues(tCDValues *firstCD, tCDValues *secondCD,
     }
     else
     {
-        error = (firstValue - secondValue) * lineCFG.inverse;
+        error = (-firstValue + secondValue) * lineCFG.inverse;
     }
 
     bool firstCrossCheck = ((lineCFG.crossRoadMin <= firstValue) &&
@@ -119,6 +121,41 @@ void setDefaultLine()
     lineCFG.rgbCross[1] = true;
     lineCFG.rgbCross[2] = true;
 }
+
+void setDefaultLineRightStop() {
+    setBaseCoef();
+    lineCFG.maxLine = 100;
+    lineCFG.minLine = 0;
+    lineCFG.inverse = 1;
+    lineCFG.crossRoadMax = 50;
+    lineCFG.crossRoadMin = -100;
+    lineCFG.sensorsIndError = 2;
+    lineCFG.sensorsIndCross = 0;
+    lineCFG.rgb[0] = true;
+    lineCFG.rgb[1] = true;
+    lineCFG.rgb[2] = true;
+    lineCFG.rgbCross[0] = true;
+    lineCFG.rgbCross[1] = true;
+    lineCFG.rgbCross[2] = true;
+}
+
+void setDefaultLineLeftStop() {
+    setBaseCoef();
+    lineCFG.maxLine = 100;
+    lineCFG.minLine = 0;
+    lineCFG.inverse = 1;
+    lineCFG.crossRoadMax = 50;
+    lineCFG.crossRoadMin = -100;
+    lineCFG.sensorsIndError = 2;
+    lineCFG.sensorsIndCross = 1;
+    lineCFG.rgb[0] = true;
+    lineCFG.rgb[1] = true;
+    lineCFG.rgb[2] = true;
+    lineCFG.rgbCross[0] = true;
+    lineCFG.rgbCross[1] = true;
+    lineCFG.rgbCross[2] = true;
+}
+
 
 void setDefaultLineGreyCross()
 {
@@ -276,7 +313,7 @@ void lineFollowCross(float startPower, float endPower, short crossCount,
     float e, ee = 0, U, P, I, D;
     float kp, kd, ki;
     float curPower = startPower, curPowerA, curPowerB;
-    float oldAveEnc = (nMotorEncoder[motorB] - nMotorEncoder[motorA]) / 2;
+    float oldAveEnc = (-nMotorEncoder[motorB] - nMotorEncoder[motorA]) / 2;
     short curCnt = 0;
     bool flag = false;
 
@@ -293,7 +330,7 @@ void lineFollowCross(float startPower, float endPower, short crossCount,
     {
         curPower = smooth(
             startPower, endPower,
-            (nMotorEncoder[motorB] - nMotorEncoder[motorA]) / 2 - oldAveEnc,
+            (-nMotorEncoder[motorB] - nMotorEncoder[motorA]) / 2 - oldAveEnc,
             boost);
 
         motorAstop = false;
@@ -332,8 +369,8 @@ void lineFollowCross(float startPower, float endPower, short crossCount,
 
         saveRatioPID(&curPowerA, &curPowerB);
 
-        motor[motorA] = curPowerA;
-        motor[motorB] = curPowerB;
+        setMotorA(curPowerA);
+        setMotorB(curPowerB);
         ee = e;
         sleep(1);
     }
@@ -352,7 +389,7 @@ void lineFollowEncoder(float startPower, float topPower, float endPower,
     float e, ee = 0, U, P, I, D;
     float kp, kd, ki;
     float curPower = startPower, curPowerA, curPowerB;
-    float oldAveEnc = (nMotorEncoder[motorB] - nMotorEncoder[motorA]) / 2;
+    float oldAveEnc = (-nMotorEncoder[motorB] - nMotorEncoder[motorA]) / 2;
     short curEnc = 0;
 
     int errSz = 20;
@@ -411,8 +448,8 @@ void lineFollowEncoder(float startPower, float topPower, float endPower,
 
         saveRatioPID(&curPowerA, &curPowerB);
 
-        motor[motorA] = curPowerA;
-        motor[motorB] = curPowerB;
+        setMotorA(curPowerA);
+        setMotorB(curPowerB);
         ee = e;
         sleep(1);
     }

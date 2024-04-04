@@ -7,7 +7,7 @@
 #pragma config(Motor, motorC, motorLeftGrabber, tmotorEV3_Medium, openLoop,encoder)
 #pragma config(Motor, motorD, motorRightGrabber, tmotorEV3_Medium, openLoop,encoder)
 
-#define CALIBRATION
+//#define CALIBRATION
 #define WRITE
 #include "../include/includes.h"
 

@@ -1,6 +1,8 @@
-const float g_ArcKP = 2;
-const float g_ArcKD = 5;
-const float g_ArcKI = 0.045;
+#include "syncVoltage.c"
+
+const float g_ArcKP = 7;
+const float g_ArcKD = 9;
+const float g_ArcKI = 0.08;
 
 bool checkEncForArc(float startVA, float startVB, float encA, float encB,
                     float enc) {
@@ -161,8 +163,8 @@ void arcEnc(float startVA, float startVB, float topVX, float stopVX, float enc,
         }
 
         saveRatioPID(&tempVA, &tempVB);
-        motor[motorA] = tempVA;
-        motor[motorB] = tempVB;
+        setMotorA(tempVA);
+        setMotorB(tempVB);
 
         eold = err;
         sleep(1);
@@ -327,8 +329,8 @@ void arcColor_enc(float startVA, float startVB, float topVX, float stopVX, float
         }
 
         saveRatioPID(&tempVA, &tempVB);
-        motor[motorA] = tempVA;
-        motor[motorB] = tempVB;
+        setMotorA(tempVA);
+        setMotorB(tempVB);
 
         eold = err;
         sleep(1);
@@ -481,3 +483,11 @@ void lineAligning(int velocity, float targetAngle, bool type = true, int color =
     }
 }
 */
+
+void turnLeftDeg(float startV, float topV, float stopV) {
+    arcEnc(startV, -startV, -topV, -stopV, 208);
+}
+
+void turnRightDeg(float startV, float topV, float stopV) {
+    arcEnc(-startV, startV, topV, stopV, 208);
+}
