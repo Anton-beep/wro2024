@@ -123,13 +123,26 @@ void startFirstMovement()
     arcEnc(30, -30, 50, 30, 45);
     stopMove(100);
     arcEnc(-30, -30, -60, -80, 100);
-    setMotorA(-90);
-    setMotorB(-90);
+    setMotorA(-60);
+    setMotorB(-60);
 
     getCDValues(&CDSensor2);
-    while (CDSensor2.normAmbient > 20)
+    while (CDSensor2.normAmbient > 40)
     {
         getCDValues(&CDSensor2);
+    }
+    setMotorA(-40);
+    setMotorB(-40);
+    while (CDSensor2.normAmbient < 90)
+    {
+        getCDValues(&CDSensor2);
+    }
+    setMotorBrakeMode(motorB, motorBrake);
+    setMotorB(0);
+    getCDValues(&CDSensor1);
+    while (CDSensor1.normAmbient < 90)
+    {
+        getCDValues(&CDSensor1);
     }
     MTVarsA.targetEnc = nMotorEncoder[motorA];
     MTVarsB.targetEnc = nMotorEncoder[motorB];
@@ -149,13 +162,28 @@ void prepareBeforeTakeCubesFromLine() {
 
 void takeCubesFromLine()
 {
+    arcEnc(0, 35, 90, 35, 350);
+
+    setMotorBrakeMode(motorA, motorBrake);
+    setMotorA(0);
+    setMotorB(21);
+    getCDValues(&CDSensor2);
+    while (CDSensor2.normAmbient < 95.7)
+    {
+        getCDValues(&CDSensor2);
+    }
+    MTVarsA.targetEnc = nMotorEncoder[motorA];
+    MTVarsB.targetEnc = nMotorEncoder[motorB];
+
+    stopMove(100, true);
+
     if (CUBE_MANIP_LEFT[0] != 0 || CUBE_MANIP_RIGHT[0] != 0)
     {
         arcEnc(-25, -25, -35, -25, 260);
-        arcEnc(-20, -20, -15, -15, 20);
+        arcEnc(-20, -20, -15, -15, 40);
         stopMove(200);
         setTimeManipC(200, -60, 0, 8);
-        setTimeManipD(1200, -40, 0, 8);
+        setTimeManipD(1000, -40, 0, 8);
         waitForManipD();
         sleep(200);
         setTimeManipC(500, 80, 80, 8);
@@ -164,20 +192,29 @@ void takeCubesFromLine()
         setDegManipD(constsManipD.holdCubes, 40, 0, 8);
         waitForManipD();
         stopMove(300);
+        arcEnc(29, 29, 90, 29, 275);
     }
     else
     {
         arcEnc(-25, -25, -45, -20, 255);
         setTimeManipC(500, 80, 70, 8);
-        arcEnc(-20, -20, -15, -15, 26);
+        arcEnc(-20, -20, -15, -15, 45);
         stopMove(100);
         waitForManipC();
         sleep(200);
         setDegManipD(constsManipD.holdCubes, 40, 0, 8);
         waitForManipD();
+        arcEnc(60, 60, 93, 60, 265);
     }
-    arcEnc(27, 27, 60, 27, 275);
-    stopMove(300);
+    setMotorA(29);
+    setMotorB(29);
+    getCDValues(&CDSensor1);
+    while (CDSensor1.normAmbient < 90)
+    {
+        getCDValues(&CDSensor1);
+    }
+    MTVarsA.targetEnc = nMotorEncoder[motorA];
+    MTVarsB.targetEnc = nMotorEncoder[motorB];
 }
 
 void takeRedAndYellowLower()
@@ -186,59 +223,32 @@ void takeRedAndYellowLower()
 
 void takeRedAndYellowUpper()
 {
-    // prepareBeforeTakeCubesFromLine();
-    // arcEnc(0, 29, 90, 29, 300);
+    prepareBeforeTakeCubesFromLine();
+    takeCubesFromLine();
+    arcEnc(0, -29, -60, -29, 350);
 
-    // setMotorBrakeMode(motorA, motorBrake);
-    // setMotorA(0);
-    // setMotorB(28);
-    // getCDValues(&CDSensor2);
-    // while (CDSensor2.normAmbient < 80)
-    // {
-    //     getCDValues(&CDSensor2);
-    // }
-    // MTVarsA.targetEnc = nMotorEncoder[motorA];
-    // MTVarsB.targetEnc = nMotorEncoder[motorB];
-
-    // stopMove(300, true);
-
-    // setMotorBrakeMode(motorB, motorBrake);
-    // setMotorB(0);
-    // setMotorA(28);
-    // getCDValues(&CDSensor1);
-    // while (CDSensor1.normAmbient < 92.5)
-    // {
-    //     getCDValues(&CDSensor1);
-    // }
-    // MTVarsA.targetEnc = nMotorEncoder[motorA];
-    // MTVarsB.targetEnc = nMotorEncoder[motorB];
-    // stopMove(100, true);
-    // takeCubesFromLine();
-
-    // arcEnc(0, -29, -60, -29, 350);
-    // setMotorBrakeMode(motorA, motorBrake);
-    // setMotorA(0);
-    // setMotorB(-29);
-    // getCDValues(&CDSensor2);
-    // while (CDSensor2.normAmbient < 80)
-    // {
-    //     getCDValues(&CDSensor2);
-    // }
-    // while (CDSensor2.normAmbient > 70)
-    // {
-    //     getCDValues(&CDSensor2);
-    // }
-    // MTVarsA.targetEnc = nMotorEncoder[motorA];
-    // MTVarsB.targetEnc = nMotorEncoder[motorB];
-    // stopMove(400, true);
+    setMotorBrakeMode(motorA, motorBrake);
+    setMotorA(0);
+    setMotorB(-29);
+    getCDValues(&CDSensor2);
+    while (CDSensor2.normAmbient < 90)
+    {
+        getCDValues(&CDSensor2);
+    }
     CUBE_MANIP_LEFT[0] = 1;
     CUBE_MANIP_RIGHT[0] = 1;
+    while (CDSensor2.normAmbient > 70)
+    {
+        getCDValues(&CDSensor2);
+    }
+    MTVarsA.targetEnc = nMotorEncoder[motorA];
+    MTVarsB.targetEnc = nMotorEncoder[motorB];
 
-    lineFollowEncoder(28, 50, 50, 50);
-    setMotorA(-50);
-    setMotorB(-50);
+    lineFollowEncoder(28, 40, 40, 40);
+    setMotorA(-40);
+    setMotorB(-40);
     getCDValues(&CDSensor1);
-    while (CDSensor1.normAmbient > 20)
+    while (CDSensor1.normAmbient > 30)
     {
         getCDValues(&CDSensor1);
     }
@@ -248,34 +258,22 @@ void takeRedAndYellowUpper()
     lineFollowEncoder(70, 45, 30, 210);
     stopMove(400);
 
-    // prepareBeforeTakeCubesFromLine();
-    // arcEnc(0, 29, 90, 29, 350);
-
+    // arcEnc(0, 35, 90, 35, 350);
     // setMotorBrakeMode(motorA, motorBrake);
     // setMotorA(0);
-    // setMotorB(28);
+    // setMotorB(24);
     // getCDValues(&CDSensor2);
-    // while (CDSensor2.normAmbient < 80)
+    // while (CDSensor2.normAmbient < 95)
     // {
     //     getCDValues(&CDSensor2);
     // }
     // MTVarsA.targetEnc = nMotorEncoder[motorA];
     // MTVarsB.targetEnc = nMotorEncoder[motorB];
-
-    // stopMove(300, true);
-
-    // setMotorBrakeMode(motorB, motorBrake);
-    // setMotorB(0);
-    // setMotorA(28);
-    // getCDValues(&CDSensor1);
-    // while (CDSensor1.normAmbient < 92.5)
-    // {
-    //     getCDValues(&CDSensor1);
-    // }
-    // MTVarsA.targetEnc = nMotorEncoder[motorA];
-    // MTVarsB.targetEnc = nMotorEncoder[motorB];
     // stopMove(100, true);
-    // takeCubesFromLine();
+
+    prepareBeforeTakeCubesFromLine();
+    takeCubesFromLine();
+    stopMove(300);
 
     CUBE_MANIP_LEFT[1] = 1;
     CUBE_MANIP_RIGHT[1] = 1;
@@ -284,9 +282,27 @@ void takeRedAndYellowUpper()
 }
 
 void goToLowerFromUpper() {
-    arcEnc(30, -30, -60, -30, 180);
+    //arcEnc(30, -30, -50, -30, 100);
+    arcEnc(30, -30, -80, -30, 270);
+    setMotorA(30);
+    setMotorB(-30);
+    getCDValues(&CDSensor1);
+    while (CDSensor1.normAmbient < 90)
+    {
+        getCDValues(&CDSensor1);
+    }
+    while (CDSensor1.normAmbient > 20)
+    {
+        getCDValues(&CDSensor1);
+    }
+    while (CDSensor1.normAmbient < 30)
+    {
+        getCDValues(&CDSensor1);
+    }
+    MTVarsA.targetEnc = nMotorEncoder[motorA];
+    MTVarsB.targetEnc = nMotorEncoder[motorB];
     stopMove(100);
-    arcEnc(-30, -30, -93, -30, 700);
+    arcEnc(-40, -40, -93, -33, 700);
     setMotorA(-30);
     setMotorB(-30);
     getCDValues(&CDSensor1);
@@ -304,8 +320,7 @@ void goToLowerFromUpper() {
     }
     MTVarsA.targetEnc = nMotorEncoder[motorA];
     MTVarsB.targetEnc = nMotorEncoder[motorB];
-    arcEnc(-30, -30, -30, -30, 7);
-    arcEnc(0, -30, -90, -30, 370);
+    arcEnc(0, -28, -90, -30, 370);
 
     setMotorBrakeMode(motorA, motorBrake);
     setMotorA(0);
@@ -316,17 +331,18 @@ void goToLowerFromUpper() {
         getCDValues(&CDSensor2);
     }
     getCDValues(&CDSensor2);
-    while (CDSensor2.normAmbient > 60)
+    while (CDSensor2.normAmbient > 80)
     {
         getCDValues(&CDSensor2);
     }
     MTVarsA.targetEnc = nMotorEncoder[motorA];
     MTVarsB.targetEnc = nMotorEncoder[motorB];
     stopMove(300, true);
-    arcEnc(30, 30, 50, 30, 240);
+    arcEnc(30, 30, 80, 30, 320);
     stopMove(300);
 
     // использовать для старта в lower
+    setRightSensorDefault();
     lineFollowEncoder(70, 90, 27, 200);
 
     setMotorA(-27);
@@ -340,11 +356,59 @@ void goToLowerFromUpper() {
     MTVarsB.targetEnc = nMotorEncoder[motorB];
 
     arcEnc(-29, -29, -40, -45, 70);
-    lineFollowEncoder(45, 40, 30, 50);
+    lineFollowEncoder(45, 50, 30, 100);
     stopMove(300);
 }
 
-void buildTowersInLower() {
+void buildYellowTowerInLower() {
+    setTimeManipD(500, -15, 0, 8);
+    lineFollowEncoder(45, 40, 30, 320);
+    setTimeManipC(200, -60, 0, 8);
+    arcEnc(-30, -30, -25, -18, 100);
+    stopMove(100);
+    setDegManipD(constsManipD.takeSecondCube, 40, 0, 8);
+    waitForManipD();
+    setTimeManipC(600, 60, 80, 8);
+    waitForManipC();
+    setDegManipD(constsManipD.liftSecondCube - constsManipD.takeSecondCube, 40, 0, 8);
+    waitForManipD();
+    stopD();
+    CUBE_MANIP_LEFT[0] = CUBE_MANIP_LEFT[1];
+    CUBE_MANIP_RIGHT[0] = CUBE_MANIP_RIGHT[1];
+    CUBE_MANIP_LEFT[1] = 0;
+    CUBE_MANIP_RIGHT[1] = 0;
+
+    arcEnc(30, 30, 70, 30, 400);
+    setDegManipD(constsManipD.liftSecondCube - constsManipD.readyFor2, -30, 0, 8);
+    setMotorA(30);
+    setMotorB(30);
+    getCDValues(&CDSensor1);
+    while (CDSensor1.normAmbient > 30)
+    {
+        getCDValues(&CDSensor1);
+    }
+    MTVarsA.targetEnc = nMotorEncoder[motorA];
+    MTVarsB.targetEnc = nMotorEncoder[motorB];
+    arcEnc(30, 30, 50, 27, 220);
+    stopMove(300);
+
+    lineFollowEncoder(30, 40, 30, 200);
+    setMotorA(-30);
+    setMotorB(-30);
+    getCDValues(&CDSensor1);
+    while (CDSensor1.normAmbient > 30)
+    {
+        getCDValues(&CDSensor1);
+    }
+    arcEnc(-30, -30, -40, -50, 60);
+    lineFollowEncoder(50, 60, 28, 235);
+    stopMove(3000);
+    takeCubesFromLine();
+
+    CUBE_MANIP_LEFT[1] = CUBE_MANIP_LEFT[0];
+    CUBE_MANIP_RIGHT[1] = CUBE_MANIP_RIGHT[0];
+    CUBE_MANIP_LEFT[0] = 1;
+    CUBE_MANIP_RIGHT[0] = 1;
 }
 
 void myStart()
@@ -353,23 +417,24 @@ void myStart()
     stopMove(0, true);
     if (UPPER_START)
     {
-        lineFollowEncoder(70, 90, 27, 370);
+        setRightSensorDefault();
+        lineFollowEncoder(50, 50, 27, 370);
 
         setMotorA(-27);
         setMotorB(-27);
         getCDValues(&CDSensor1);
-        while (CDSensor1.normAmbient > 30)
+        while (CDSensor1.normAmbient > 40)
         {
             getCDValues(&CDSensor1);
         }
         stopMove(600, true);
 
-        arcEnc(30, 30, 40, 30, 89);
+        arcEnc(30, 30, 40, 30, 85);
         stopMove(300);
 
         takeRedAndYellowUpper();
         goToLowerFromUpper();
-        buildTowersInLower();
+        buildYellowTowerInLower();
     }
     else
     {
@@ -386,7 +451,7 @@ void testFunc()
     // lineFollowCross(20, 20, 1);
     // stopMove(1000);
 
-    //displayValues(&CDSensor2);
+    //myCalibration();
     myStart();
 
     // setDegManipC(constsManipC.closed, 40, 80, 7.9);

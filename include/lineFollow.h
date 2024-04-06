@@ -11,9 +11,9 @@ const float kdConstBase = 16;
 const float kiConstBase = 0.001;
 
 // Движение по одному датчику
-const float kpConstOne = 0.4;
-const float kdConstOne = 5;
-const float kiConstOne = 0.005;
+const float kpConstOne = 0.55;
+const float kdConstOne = 11;
+const float kiConstOne = 0.001;
 
 float calibrationPower = 50;
 
@@ -122,15 +122,16 @@ void setDefaultLine()
     lineCFG.rgbCross[2] = true;
 }
 
-void setDefaultLineRightStop() {
-    setBaseCoef();
+void setLeftSensorDefault()
+{
+    setOneSensorCoef();
     lineCFG.maxLine = 100;
     lineCFG.minLine = 0;
     lineCFG.inverse = 1;
     lineCFG.crossRoadMax = 50;
     lineCFG.crossRoadMin = -100;
-    lineCFG.sensorsIndError = 2;
-    lineCFG.sensorsIndCross = 0;
+    lineCFG.sensorsIndError = 0;
+    lineCFG.sensorsIndCross = 2;
     lineCFG.rgb[0] = true;
     lineCFG.rgb[1] = true;
     lineCFG.rgb[2] = true;
@@ -139,15 +140,16 @@ void setDefaultLineRightStop() {
     lineCFG.rgbCross[2] = true;
 }
 
-void setDefaultLineLeftStop() {
-    setBaseCoef();
+void setRightSensorDefault()
+{
+    setOneSensorCoef();
     lineCFG.maxLine = 100;
     lineCFG.minLine = 0;
     lineCFG.inverse = 1;
     lineCFG.crossRoadMax = 50;
     lineCFG.crossRoadMin = -100;
-    lineCFG.sensorsIndError = 2;
-    lineCFG.sensorsIndCross = 1;
+    lineCFG.sensorsIndError = 1;
+    lineCFG.sensorsIndCross = 2;
     lineCFG.rgb[0] = true;
     lineCFG.rgb[1] = true;
     lineCFG.rgb[2] = true;

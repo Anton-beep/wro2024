@@ -1,1 +1,2 @@
 #define RUN_ONLY_TEST_FUNCTION 1
+#define CALIBRATION 0

@@ -9,12 +9,12 @@ tCDValues CDSensor4, CDSensor3, CDSensor1, CDSensor2;
 
 void colorDetectInit() {
     CDSensor1.nDeviceIndex = S1;
-    CDSensor1.minAmbient = 2480;
-    CDSensor1.maxAmbient = 1640;
+    CDSensor1.minAmbient = 2504;
+    CDSensor1.maxAmbient = 1704;
 
     CDSensor2.nDeviceIndex = S2;
-    CDSensor2.minAmbient = 2504;
-    CDSensor2.maxAmbient = 1740;
+    CDSensor2.minAmbient = 2448;
+    CDSensor2.maxAmbient = 1620;
 
     CDSensor3.nDeviceIndex = S3;
     CDSensor3.minRed = 0;
@@ -200,5 +200,43 @@ void displayValues(tCDValues *CDSensor) {
         }
         sleep(400);
         eraseDisplay();
+    }
+}
+
+void myCalibration() {
+    setMotorBrakeMode(motorA, motorCoast);
+    setMotorBrakeMode(motorB, motorCoast);
+    setMotorBrakeMode(motorC, motorCoast);
+    setMotorBrakeMode(motorD, motorCoast);
+
+    getCDValues(&CDSensor1);
+    getCDValues(&CDSensor2);
+    int minAmbient1 = CDSensor1.ambient;
+    int maxAmbient1 = CDSensor1.ambient;
+    int minAmbient2 = CDSensor2.ambient;
+    int maxAmbient2 = CDSensor2.ambient;
+
+    while (true) {
+        getCDValues(&CDSensor1);
+        getCDValues(&CDSensor2);
+        if (CDSensor1.ambient < minAmbient1) {
+            minAmbient1 = CDSensor1.ambient;
+        }
+        if (CDSensor1.ambient > maxAmbient1) {
+            maxAmbient1 = CDSensor1.ambient;
+        }
+        if (CDSensor2.ambient < minAmbient2) {
+            minAmbient2 = CDSensor2.ambient;
+        }
+        if (CDSensor2.ambient > maxAmbient2) {
+            maxAmbient2 = CDSensor2.ambient;
+        }
+        eraseDisplay();
+        displayCenteredTextLine(1, "MaxAmbient1: %d", maxAmbient1);
+        displayCenteredTextLine(3, "MinAmbient1: %d", minAmbient1);
+        displayCenteredTextLine(5, "MaxAmbient2: %d", maxAmbient2);
+        displayCenteredTextLine(7, "MinAmbient2: %d", minAmbient2);
+        displayCenteredTextLine(9, "NormAmbient1: %d", CDSensor1.normAmbient);
+        displayCenteredTextLine(11, "NormAmbient2: %d", CDSensor2.normAmbient);
     }
 }

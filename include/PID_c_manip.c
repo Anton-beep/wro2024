@@ -14,6 +14,8 @@ typedef struct {
 typedef struct {
     int holdCubes;
     int readyFor2;
+    int takeSecondCube;
+    int liftSecondCube;
     int readyFor4;
     int startSuspension;
     int suspensionForStartBridge;
@@ -53,6 +55,8 @@ task initManip() {
 
     constsManipD.holdCubes = 100;
     constsManipD.readyFor2 = 120;
+    constsManipD.takeSecondCube = 100;
+    constsManipD.liftSecondCube = 130;
     constsManipD.readyFor4 = 188;
     constsManipD.startSuspension = 190;
     constsManipD.suspensionForStartBridge = 250;
