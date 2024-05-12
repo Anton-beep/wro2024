@@ -64,6 +64,8 @@ void stopMove(int delayMsec = 0, bool reset = false, bool mode = true) {
     if (reset) {
         resetMotorEncoder(motorA);
         resetMotorEncoder(motorB);
+        nMotorEncoder[motorA] = 0;
+        nMotorEncoder[motorB] = 0;
         MTVarsA.targetEnc = 0;
         MTVarsB.targetEnc = 0;
         MTVarsA.targetV = 0;

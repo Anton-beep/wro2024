@@ -1,8 +1,8 @@
 #include "syncVoltage.c"
 
-const float g_ArcKP = 7;
-const float g_ArcKD = 9;
-const float g_ArcKI = 0.08;
+const float g_ArcKP = 2;
+const float g_ArcKD = 5;
+const float g_ArcKI = 0.01;
 
 bool checkEncForArc(float startVA, float startVB, float encA, float encB,
                     float enc) {

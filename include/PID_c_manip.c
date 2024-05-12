@@ -6,72 +6,6 @@ TODO:
 */
 
 
-typedef struct {
-    int opened;
-    int closed;
-} ConstsManipC;
-
-typedef struct {
-    int holdCubes;
-    int readyFor2;
-    int takeSecondCube;
-    int liftSecondCube;
-    int readyFor4;
-    int startSuspension;
-    int suspensionForStartBridge;
-    int suspensionMovingBridge;
-    int suspensionBridgePeak;
-    int suspensionMovingFromPeak;
-    int suspensionGoBackFromBridge;
-    int suspenionPeakGoBack;
-    int suspenionGoBackAfterPeak;
-    int endSuspension;
-
-    int suspensionOverObstacles1Part;
-    int suspensionOverObstacles;
-    int suspensionOverObstaclesBack;
-} ConstsManipD;
-
-ConstsManipC constsManipC;
-ConstsManipD constsManipD;
-
-task initManip() {
-    motor[motorC] = -40;
-    motor[motorD] = -40;
-    sleep(400);
-
-    motor[motorC] = 0;
-    motor[motorD] = 0;
-    setMotorBrakeMode(motorC, motorCoast);
-    setMotorBrakeMode(motorD, motorCoast);
-    sleep(500);
-    setMotorBrakeMode(motorC, motorBrake);
-    setMotorBrakeMode(motorD, motorBrake);
-
-    // consts
-
-    constsManipC.opened = 0;
-    constsManipC.closed = 373;
-
-    constsManipD.holdCubes = 100;
-    constsManipD.readyFor2 = 120;
-    constsManipD.takeSecondCube = 100;
-    constsManipD.liftSecondCube = 130;
-    constsManipD.readyFor4 = 188;
-    constsManipD.startSuspension = 190;
-    constsManipD.suspensionForStartBridge = 250;
-    constsManipD.suspensionBridgePeak = 250;
-    constsManipD.suspensionMovingFromPeak = 110;
-    constsManipD.suspensionGoBackFromBridge = 440;
-    constsManipD.suspenionPeakGoBack = 170;
-    constsManipD.suspenionGoBackAfterPeak = 80;
-    constsManipD.endSuspension = 520;
-
-    constsManipD.suspensionOverObstacles1Part = 280;
-    constsManipD.suspensionOverObstacles = 345;
-    constsManipD.suspensionOverObstaclesBack = 290;
-}
-
 int min(int a, int b)
 {
     return a < b ? a : b;
@@ -80,30 +14,6 @@ int min(int a, int b)
 int max(int a, int b)
 {
     return a > b ? a : b;
-}
-
-int getSignedRPM(short mot)
-{
-    if (motor[mot] > 0)
-    {
-        return getMotorRPM(mot);
-    }
-    else
-    {
-        return -getMotorRPM(mot);
-    }
-}
-
-void stopC()
-{
-    motor[motorC] = 0;
-    setMotorBrakeMode(motorC, motorBrake);
-}
-
-void stopD()
-{
-    motor[motorD] = 0;
-    setMotorBrakeMode(motorD, motorBrake);
 }
 
 void setPowerAdjustBatteryManipC(short pow, float batVoltage)
@@ -144,6 +54,30 @@ void setPowerAdjustBatteryManipD(short pow, float batVoltage)
             motor[motorD] = max(1, val);
         }
     }
+}
+
+int getSignedRPM(short mot)
+{
+    if (motor[mot] > 0)
+    {
+        return getMotorRPM(mot);
+    }
+    else
+    {
+        return -getMotorRPM(mot);
+    }
+}
+
+void stopC()
+{
+    motor[motorC] = 0;
+    setMotorBrakeMode(motorC, motorBrake);
+}
+
+void stopD()
+{
+    motor[motorD] = 0;
+    setMotorBrakeMode(motorD, motorBrake);
 }
 
 void keepMovingManipC(short pow, float voltage)
@@ -335,6 +269,66 @@ bool *setDegManipD(int deg, short powStart, short powAfter, float voltage = 8)
     MANIP_D_READY = false;
     startTask(moveDegManipD);
     return &MANIP_D_READY;
+}
+
+typedef struct {
+    int takeFromLineCube;
+    int close;
+    int goOverTwoCubesOnLine;
+} ConstsManipC;
+
+typedef struct {
+    int readCube;
+    int takeCube;
+    int put1Cube;
+    int land1Cube;
+    int prepareToTakeFromLine;
+    int goOverCubes;
+    int goOverTwoCubes;
+} ConstsManipD;
+
+ConstsManipC constsManipC;
+ConstsManipD constsManipD;
+
+bool IS_MANIPS_READY = false;
+
+task initManip() {
+    setPowerAdjustBatteryManipC(-40, 8);
+    setPowerAdjustBatteryManipD(40, 8);
+    sleep(400);
+    setMotorBrakeMode(motorC, motorBrake);
+    setMotorBrakeMode(motorD, motorBrake);
+    motor[motorC] = 0;
+    motor[motorD] = 0;
+    sleep(300);
+
+    nMotorEncoder[motorC] = 0;
+    nMotorEncoder[motorD] = 0;
+
+    setDegManipD(98, -75, -15);
+    waitForManipD();
+    sleep(500);
+    // consts
+
+    constsManipC.close = 300;
+    constsManipC.takeFromLineCube = 269;
+    constsManipC.goOverTwoCubesOnLine = 225;
+
+    constsManipD.readCube = -185;
+    constsManipD.takeCube = -134;
+    constsManipD.put1Cube = -100;
+    constsManipD.land1Cube = 52;
+    constsManipD.prepareToTakeFromLine = -125;
+    constsManipD.goOverCubes = -102;
+    constsManipD.goOverTwoCubes = -95;
+
+    IS_MANIPS_READY = true;
+}
+
+void waitInitManip() {
+    while (!IS_MANIPS_READY) {
+        sleep(100);
+    }
 }
 
 void runMot(short mot)

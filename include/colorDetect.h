@@ -9,20 +9,28 @@ tCDValues CDSensor4, CDSensor3, CDSensor1, CDSensor2;
 
 void colorDetectInit() {
     CDSensor1.nDeviceIndex = S1;
-    CDSensor1.minAmbient = 2504;
-    CDSensor1.maxAmbient = 1704;
+    CDSensor1.minRed = 25;
+    CDSensor1.maxRed = 293;
+    CDSensor1.minGreen = 31;
+    CDSensor1.maxGreen = 301;
+    CDSensor1.minBlue = 21;
+    CDSensor1.maxBlue = 269;
 
     CDSensor2.nDeviceIndex = S2;
-    CDSensor2.minAmbient = 2448;
-    CDSensor2.maxAmbient = 1620;
+    CDSensor2.minRed = 28;
+    CDSensor2.maxRed = 319;
+    CDSensor2.minGreen = 38;
+    CDSensor2.maxGreen = 347;
+    CDSensor2.minBlue = 17;
+    CDSensor2.maxBlue = 190;
 
     CDSensor3.nDeviceIndex = S3;
-    CDSensor3.minRed = 0;
-    CDSensor3.maxRed = 255;
-    CDSensor3.minGreen = 0;
-    CDSensor3.maxGreen = 255;
-    CDSensor3.minBlue = 0;
-    CDSensor3.maxBlue = 255;
+    CDSensor3.minRed = 12;
+    CDSensor3.maxRed = 290;
+    CDSensor3.minGreen = 10;
+    CDSensor3.maxGreen = 224;
+    CDSensor3.minBlue = 5;
+    CDSensor3.maxBlue = 129;
 
 
     CDSensor4.nDeviceIndex = S4;
@@ -159,6 +167,13 @@ void displayValues(tCDValues *CDSensor) {
     getCDValues(CDSensor);
     int minAmbient = CDSensor->ambient;
     int maxAmbient = CDSensor->ambient;
+
+    int minRed = CDSensor->rawRed;
+    int maxRed = CDSensor->rawRed;
+    int minGreen = CDSensor->rawGreen;
+    int maxGreen = CDSensor->rawGreen;
+    int minBlue = CDSensor->rawBlue;
+    int maxBlue = CDSensor->rawBlue;
     while (1){
         getCDValues(CDSensor);
         if (SensorType[CDSensor->nDeviceIndex] != 93) {
@@ -181,22 +196,43 @@ void displayValues(tCDValues *CDSensor) {
             displayCenteredTextLine(5, "HSV: %f %f %f", CDSensor->hue,
                                     CDSensor->sat, CDSensor->val);
             displayBigStringAt(125, 20, "%d", CDSensor->color);
-            clearSounds();
-            if (CDSensor->color == 1) {
-                playSoundFile("Right");
-            } else if (CDSensor->color == 2) {
-                playSoundFile("Yellow");
-            } else if (CDSensor->color == 3) {
-                playSoundFile("Green");
-            } else if (CDSensor->color == 4) {
-                playSoundFile("Blue");
-            } else if (CDSensor->color == 5) {
-                playSoundFile("Black");
-            } else if (CDSensor->color == 6) {
-                playSoundFile("White");
-            } else {
-                playSoundFile("Uh-oh");
+            if (CDSensor->rawRed < minRed) {
+                minRed = CDSensor->rawRed;
             }
+            if (CDSensor->rawRed > maxRed) {
+                maxRed = CDSensor->rawRed;
+            }
+            if (CDSensor->rawGreen < minGreen) {
+                minGreen = CDSensor->rawGreen;
+            }
+            if (CDSensor->rawGreen > maxGreen) {
+                maxGreen = CDSensor->rawGreen;
+            }
+            if (CDSensor->rawBlue < minBlue) {
+                minBlue = CDSensor->rawBlue;
+            }
+            if (CDSensor->rawBlue > maxBlue) {
+                maxBlue = CDSensor->rawBlue;
+            }
+            displayCenteredTextLine(7, "Min RGB: %d %d %d", minRed, minGreen, minBlue);
+            displayCenteredTextLine(9, "Max RGB: %d %d %d", maxRed, maxGreen, maxBlue);
+            displayCenteredTextLine(11, "SumNorm: %d", CDSensor->normRed + CDSensor->normGreen + CDSensor->normBlue);
+            // clearSounds();
+            // if (CDSensor->color == 1) {
+            //     playSoundFile("Right");
+            // } else if (CDSensor->color == 2) {
+            //     playSoundFile("Yellow");
+            // } else if (CDSensor->color == 3) {
+            //     playSoundFile("Green");
+            // } else if (CDSensor->color == 4) {
+            //     playSoundFile("Blue");
+            // } else if (CDSensor->color == 5) {
+            //     playSoundFile("Black");
+            // } else if (CDSensor->color == 6) {
+            //     playSoundFile("White");
+            // } else {
+            //     playSoundFile("Uh-oh");
+            // }
         }
         sleep(400);
         eraseDisplay();
