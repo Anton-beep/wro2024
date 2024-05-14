@@ -53,7 +53,7 @@ task main()
 	mainLogic();
 #endif
 
-	stopMove(100, true);
+	stopMove(1, true);
 	eraseDisplay();
 	displayCenteredBigTextLine(5, "seconds");
 	displayCenteredBigTextLine(10, "%f", (float)(nPgmTime - startExecution) / 1000);

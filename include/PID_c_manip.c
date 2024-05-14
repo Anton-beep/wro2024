@@ -274,17 +274,22 @@ bool *setDegManipD(int deg, short powStart, short powAfter, float voltage = 8)
 typedef struct {
     int takeFromLineCube;
     int close;
+    int almostClose;
     int goOverTwoCubesOnLine;
+    int openToTakeFromStorage;
 } ConstsManipC;
 
 typedef struct {
     int readCube;
     int takeCube;
     int put1Cube;
+    int put2Cube;
     int land1Cube;
     int prepareToTakeFromLine;
     int goOverCubes;
     int goOverTwoCubes;
+    int takeFromStorage;
+    int carryCubes;
 } ConstsManipD;
 
 ConstsManipC constsManipC;
@@ -294,8 +299,8 @@ bool IS_MANIPS_READY = false;
 
 task initManip() {
     setPowerAdjustBatteryManipC(-40, 8);
-    setPowerAdjustBatteryManipD(40, 8);
-    sleep(400);
+    setPowerAdjustBatteryManipD(-20, 8);
+    sleep(600);
     setMotorBrakeMode(motorC, motorBrake);
     setMotorBrakeMode(motorD, motorBrake);
     motor[motorC] = 0;
@@ -305,22 +310,29 @@ task initManip() {
     nMotorEncoder[motorC] = 0;
     nMotorEncoder[motorD] = 0;
 
-    setDegManipD(98, -75, -15);
+    setDegManipD(300, 55, 35);
     waitForManipD();
-    sleep(500);
+    setTimeManipD(650, 35, 5);
+    waitForManipD();
+    sleep(300);
     // consts
 
     constsManipC.close = 300;
-    constsManipC.takeFromLineCube = 269;
-    constsManipC.goOverTwoCubesOnLine = 225;
+    constsManipC.almostClose = 270;
+    constsManipC.takeFromLineCube = 248;
+    constsManipC.goOverTwoCubesOnLine = 215;
+    constsManipC.openToTakeFromStorage = 180;
 
     constsManipD.readCube = -185;
-    constsManipD.takeCube = -134;
-    constsManipD.put1Cube = -100;
+    constsManipD.takeCube = 433;
+    constsManipD.put1Cube = 320;
+    constsManipD.put2Cube = 255;
     constsManipD.land1Cube = 52;
-    constsManipD.prepareToTakeFromLine = -125;
-    constsManipD.goOverCubes = -102;
-    constsManipD.goOverTwoCubes = -95;
+    constsManipD.prepareToTakeFromLine = 400;
+    constsManipD.goOverCubes = 320;
+    constsManipD.goOverTwoCubes = 280;
+    constsManipD.takeFromStorage = 300;
+    constsManipD.carryCubes = 400;
 
     IS_MANIPS_READY = true;
 }

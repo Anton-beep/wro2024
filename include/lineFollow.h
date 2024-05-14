@@ -3,11 +3,11 @@ float kdNow = 0;
 float kiNow = 0;
 
 const float kpConstBase = 5;
-const float kdConstBase = 0;
+const float kdConstBase = 3;
 const float kiConstBase = 0;
 
-const float kpConstOne = 0.7;
-const float kdConstOne = 0.5;
+const float kpConstOne = 0.4;
+const float kdConstOne = 9;
 const float kiConstOne = 0.001;
 
 float calibrationPower = 50;
@@ -183,6 +183,24 @@ void setRightSensorIn()
     lineCFG.crossRoadMax = 50;
     lineCFG.crossRoadMin = -100;
     lineCFG.sensorsIndError = 1;
+    lineCFG.sensorsIndCross = 2;
+    lineCFG.rgb[0] = true;
+    lineCFG.rgb[1] = true;
+    lineCFG.rgb[2] = true;
+    lineCFG.rgbCross[0] = true;
+    lineCFG.rgbCross[1] = true;
+    lineCFG.rgbCross[2] = true;
+}
+
+void setLeftSensorOutBrown()
+{
+    setOneSensorCoef();
+    lineCFG.maxLine = 255;
+    lineCFG.minLine = 70.7;
+    lineCFG.inverse = 1;
+    lineCFG.crossRoadMax = 50;
+    lineCFG.crossRoadMin = -100;
+    lineCFG.sensorsIndError = 0;
     lineCFG.sensorsIndCross = 2;
     lineCFG.rgb[0] = true;
     lineCFG.rgb[1] = true;
@@ -389,8 +407,8 @@ void lineFollowCross(float startPower, float endPower, short crossCount,
 
         saveRatioPID(&curPowerA, &curPowerB);
 
-        motor[motorA] = curPowerA;
-        motor[motorB] = curPowerB;
+        setMotorA(curPowerA);
+        setMotorB(curPowerB);
         ee = e;
         sleep(1);
     }
