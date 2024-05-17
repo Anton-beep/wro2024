@@ -5,7 +5,6 @@ TODO:
 захватов (ПИД регулятор на RPM)
 */
 
-
 int min(int a, int b)
 {
     return a < b ? a : b;
@@ -82,21 +81,27 @@ void stopD()
 
 void keepMovingManipC(short pow, float voltage)
 {
-    if (fabs(getMotorRPM(motorC)) < 6) {
+    if (fabs(getMotorRPM(motorC)) < 6)
+    {
         setPowerAdjustBatteryManipC(min(100, motor[motorC] + pow * 0.1), voltage);
-    } else {
+    }
+    else
+    {
         setPowerAdjustBatteryManipC(max(pow, motor[motorC] - pow * 0.1), voltage);
     }
 }
 
 void keepMovingManipD(short pow, float voltage)
 {
-    if (fabs(getMotorRPM(motorD)) < 6) {
+    if (fabs(getMotorRPM(motorD)) < 6)
+    {
         setPowerAdjustBatteryManipD(min(100, motor[motorD] + pow * 0.1), voltage);
-    } else {
+    }
+    else
+    {
         // int tempSpeed = motor[motorD] - pow * 0.1;
         // if (fabs(tempSpeed) > pow) {
-        //     setPowerAdjustBatteryManipD(tempSpeed, voltage)  ; 
+        //     setPowerAdjustBatteryManipD(tempSpeed, voltage)  ;
         // } else {
         //     setPowerAdjustBatteryManipD(pow, voltage);
         // }
@@ -271,15 +276,41 @@ bool *setDegManipD(int deg, short powStart, short powAfter, float voltage = 8)
     return &MANIP_D_READY;
 }
 
-typedef struct {
+bool *setPositionManipD(int position, short powStart, short powAfter, float voltage = 8)
+{
+    int dist = abs(position) - abs(nMotorEncoder[motorD]);
+    if (position < nMotorEncoder[motorD])
+    {
+        return setDegManipD(abs(dist), -powStart, -powAfter, voltage);
+    }
+    return setDegManipD(abs(dist), powStart, powAfter, voltage);
+}
+
+bool *setPositionManipC(int position, short powStart, short powAfter, float voltage = 8)
+{
+    int dist = abs(position) - abs(nMotorEncoder[motorC]);
+    if (position < nMotorEncoder[motorC])
+    {
+        return setDegManipC(abs(dist), -powStart, -powAfter, voltage);
+    }
+    return setDegManipC(abs(dist), powStart, powAfter, voltage);
+}
+
+typedef struct
+{
     int takeFromLineCube;
     int close;
     int almostClose;
     int goOverTwoCubesOnLine;
     int openToTakeFromStorage;
+    int prepareWater;
+    int releaseCube;
+    int takeFromStorage;
+    int openToNotBrakeSomething;
 } ConstsManipC;
 
-typedef struct {
+typedef struct
+{
     int readCube;
     int takeCube;
     int put1Cube;
@@ -290,6 +321,9 @@ typedef struct {
     int goOverTwoCubes;
     int takeFromStorage;
     int carryCubes;
+    int prepareWater;
+    int hideWall;
+    int goFromStorageCubes;
 } ConstsManipD;
 
 ConstsManipC constsManipC;
@@ -297,7 +331,8 @@ ConstsManipD constsManipD;
 
 bool IS_MANIPS_READY = false;
 
-task initManip() {
+task initManip()
+{
     setPowerAdjustBatteryManipC(-40, 8);
     setPowerAdjustBatteryManipD(-20, 8);
     sleep(600);
@@ -318,27 +353,36 @@ task initManip() {
     // consts
 
     constsManipC.close = 300;
-    constsManipC.almostClose = 270;
-    constsManipC.takeFromLineCube = 248;
-    constsManipC.goOverTwoCubesOnLine = 215;
-    constsManipC.openToTakeFromStorage = 180;
+    constsManipC.almostClose = 260;
+    constsManipC.takeFromLineCube = 245;
+    constsManipC.goOverTwoCubesOnLine = 205;
+    constsManipC.openToTakeFromStorage = 200;
+    constsManipC.prepareWater = 200;
+    constsManipC.releaseCube = 240;
+    constsManipC.takeFromStorage = 250;
+    constsManipC.openToNotBrakeSomething = 100;
 
     constsManipD.readCube = -185;
-    constsManipD.takeCube = 433;
-    constsManipD.put1Cube = 320;
-    constsManipD.put2Cube = 255;
+    constsManipD.takeCube = 440;
+    constsManipD.put1Cube = 330;
+    constsManipD.put2Cube = 210;
     constsManipD.land1Cube = 52;
-    constsManipD.prepareToTakeFromLine = 400;
+    constsManipD.prepareToTakeFromLine = 405;
     constsManipD.goOverCubes = 320;
-    constsManipD.goOverTwoCubes = 280;
+    constsManipD.goOverTwoCubes = 230;
     constsManipD.takeFromStorage = 300;
-    constsManipD.carryCubes = 400;
+    constsManipD.carryCubes = 410;
+    constsManipD.prepareWater = 450;
+    constsManipD.hideWall = 485;
+    constsManipD.goFromStorageCubes = 420;
 
     IS_MANIPS_READY = true;
 }
 
-void waitInitManip() {
-    while (!IS_MANIPS_READY) {
+void waitInitManip()
+{
+    while (!IS_MANIPS_READY)
+    {
         sleep(100);
     }
 }

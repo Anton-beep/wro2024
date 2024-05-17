@@ -6,7 +6,7 @@ const float kpConstBase = 5;
 const float kdConstBase = 3;
 const float kiConstBase = 0;
 
-const float kpConstOne = 0.4;
+const float kpConstOne = 0.6;
 const float kdConstOne = 9;
 const float kiConstOne = 0.001;
 
@@ -201,6 +201,24 @@ void setLeftSensorOutBrown()
     lineCFG.crossRoadMax = 50;
     lineCFG.crossRoadMin = -100;
     lineCFG.sensorsIndError = 0;
+    lineCFG.sensorsIndCross = 2;
+    lineCFG.rgb[0] = true;
+    lineCFG.rgb[1] = true;
+    lineCFG.rgb[2] = true;
+    lineCFG.rgbCross[0] = true;
+    lineCFG.rgbCross[1] = true;
+    lineCFG.rgbCross[2] = true;
+}
+
+void setRightSensorOutRed()
+{
+    setOneSensorCoef();
+    lineCFG.maxLine = 255;
+    lineCFG.minLine = 0; // установить красный здесь
+    lineCFG.inverse = 1;
+    lineCFG.crossRoadMax = 50;
+    lineCFG.crossRoadMin = -100;
+    lineCFG.sensorsIndError = 1;
     lineCFG.sensorsIndCross = 2;
     lineCFG.rgb[0] = true;
     lineCFG.rgb[1] = true;
