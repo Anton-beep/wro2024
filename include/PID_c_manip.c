@@ -307,6 +307,7 @@ typedef struct
     int releaseCube;
     int takeFromStorage;
     int openToNotBrakeSomething;
+    int waterUp;
 } ConstsManipC;
 
 typedef struct
@@ -324,6 +325,9 @@ typedef struct
     int prepareWater;
     int hideWall;
     int goFromStorageCubes;
+    int goFromBuiltTower;
+    int elementsGoIn;
+    int carryElements;
 } ConstsManipD;
 
 ConstsManipC constsManipC;
@@ -334,7 +338,7 @@ bool IS_MANIPS_READY = false;
 task initManip()
 {
     setPowerAdjustBatteryManipC(-40, 8);
-    setPowerAdjustBatteryManipD(-20, 8);
+    setPowerAdjustBatteryManipD(-25, 8);
     sleep(600);
     setMotorBrakeMode(motorC, motorBrake);
     setMotorBrakeMode(motorD, motorBrake);
@@ -345,36 +349,41 @@ task initManip()
     nMotorEncoder[motorC] = 0;
     nMotorEncoder[motorD] = 0;
 
-    setDegManipD(300, 55, 35);
+    setDegManipD(300, 65, 35);
     waitForManipD();
-    setTimeManipD(650, 35, 5);
+    setTimeManipD(680, 35, 5);
     waitForManipD();
     sleep(300);
     // consts
 
     constsManipC.close = 300;
-    constsManipC.almostClose = 260;
-    constsManipC.takeFromLineCube = 245;
+    constsManipC.almostClose = 250;
+    constsManipC.takeFromLineCube = 238;
     constsManipC.goOverTwoCubesOnLine = 205;
     constsManipC.openToTakeFromStorage = 200;
-    constsManipC.prepareWater = 200;
+    constsManipC.prepareWater = 190;
     constsManipC.releaseCube = 240;
     constsManipC.takeFromStorage = 250;
-    constsManipC.openToNotBrakeSomething = 100;
+    constsManipC.openToNotBrakeSomething = 60;
+    constsManipC.waterUp = 10;
+
 
     constsManipD.readCube = -185;
-    constsManipD.takeCube = 440;
-    constsManipD.put1Cube = 330;
-    constsManipD.put2Cube = 210;
+    constsManipD.takeCube = 454;
+    constsManipD.put1Cube = 333;
+    constsManipD.put2Cube = 223;
     constsManipD.land1Cube = 52;
     constsManipD.prepareToTakeFromLine = 405;
     constsManipD.goOverCubes = 320;
     constsManipD.goOverTwoCubes = 230;
     constsManipD.takeFromStorage = 300;
     constsManipD.carryCubes = 410;
-    constsManipD.prepareWater = 450;
+    constsManipD.prepareWater = 460;
     constsManipD.hideWall = 485;
     constsManipD.goFromStorageCubes = 420;
+    constsManipD.goFromBuiltTower = 215;
+    constsManipD.elementsGoIn = 350;
+    constsManipD.carryElements = 420;
 
     IS_MANIPS_READY = true;
 }

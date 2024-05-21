@@ -1,8 +1,8 @@
 #include "syncVoltage.c"
 
-const float stopKP = 5;
-const float stopKI = 0.05;
-const float stopKD = 9;
+const float stopKP = 4;
+const float stopKI = 0.06;
+const float stopKD = 6;
 
 task stopA_task {
     float u, e, ee = 0, isum = 0;

@@ -46,7 +46,7 @@ tGrabberPositionD grabberD;
 
 task initGrabber() {
     motor[motorC] = -30;
-    motor[motorD] = 40;
+    motor[motorD] = 50;
     sleep(500);
 
     setMotorBrakeMode(motorC, motorCoast);

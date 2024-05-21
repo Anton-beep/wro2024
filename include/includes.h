@@ -39,7 +39,6 @@ void initAll(){
 	// initSensor(&CDSensor3, HTCS2_MODE_ACTIVE);
 	// initSensor(&CDSensor4, HTCS2_MODE_ACTIVE);
     // startTask(initGrabber, kLowPriority);
-    startTask(initManip, kLowPriority);
     // setLEDColor(ledOff);
 	// setSoundVolume(100);
 }

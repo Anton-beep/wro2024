@@ -9,20 +9,20 @@ tCDValues CDSensor4, CDSensor3, CDSensor1, CDSensor2;
 
 void colorDetectInit() {
     CDSensor1.nDeviceIndex = S1;
-    CDSensor1.minRed = 25;
-    CDSensor1.maxRed = 293;
-    CDSensor1.minGreen = 31;
-    CDSensor1.maxGreen = 301;
-    CDSensor1.minBlue = 21;
-    CDSensor1.maxBlue = 269;
+    CDSensor1.minRed = 27;
+    CDSensor1.maxRed = 321;
+    CDSensor1.minGreen = 32;
+    CDSensor1.maxGreen = 320;
+    CDSensor1.minBlue = 24;
+    CDSensor1.maxBlue = 283;
 
     CDSensor2.nDeviceIndex = S2;
-    CDSensor2.minRed = 28;
-    CDSensor2.maxRed = 319;
-    CDSensor2.minGreen = 38;
-    CDSensor2.maxGreen = 347;
+    CDSensor2.minRed = 27;
+    CDSensor2.maxRed = 309;
+    CDSensor2.minGreen = 37;
+    CDSensor2.maxGreen = 340;
     CDSensor2.minBlue = 17;
-    CDSensor2.maxBlue = 190;
+    CDSensor2.maxBlue = 185;
 
     CDSensor3.nDeviceIndex = S3;
     CDSensor3.minRed = 12;
