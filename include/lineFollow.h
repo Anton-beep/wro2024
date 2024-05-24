@@ -228,6 +228,24 @@ void setRightSensorOutBrown()
     lineCFG.rgbCross[2] = true;
 }
 
+void setLeftSensorInRed()
+{
+    setOneSensorCoef();
+    lineCFG.maxLine = 255;
+    lineCFG.minLine = 30; // установить красный здесь
+    lineCFG.inverse = -1;
+    lineCFG.crossRoadMax = 50;
+    lineCFG.crossRoadMin = -100;
+    lineCFG.sensorsIndError = 0;
+    lineCFG.sensorsIndCross = 2;
+    lineCFG.rgb[0] = false;
+    lineCFG.rgb[1] = true;
+    lineCFG.rgb[2] = true;
+    lineCFG.rgbCross[0] = true;
+    lineCFG.rgbCross[1] = true;
+    lineCFG.rgbCross[2] = true;
+}
+
 void setRightSensorOutRed()
 {
     setOneSensorCoef();

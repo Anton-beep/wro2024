@@ -349,7 +349,7 @@ task initManip()
     nMotorEncoder[motorC] = 0;
     nMotorEncoder[motorD] = 0;
 
-    setDegManipD(300, 65, 35);
+    setDegManipD(330, 65, 35);
     waitForManipD();
     setTimeManipD(680, 35, 5);
     waitForManipD();
@@ -358,10 +358,10 @@ task initManip()
 
     constsManipC.close = 300;
     constsManipC.almostClose = 250;
-    constsManipC.takeFromLineCube = 238;
+    constsManipC.takeFromLineCube = 225;
     constsManipC.goOverTwoCubesOnLine = 205;
     constsManipC.openToTakeFromStorage = 200;
-    constsManipC.prepareWater = 190;
+    constsManipC.prepareWater = 195;
     constsManipC.releaseCube = 240;
     constsManipC.takeFromStorage = 250;
     constsManipC.openToNotBrakeSomething = 60;
@@ -369,21 +369,21 @@ task initManip()
 
 
     constsManipD.readCube = -185;
-    constsManipD.takeCube = 454;
-    constsManipD.put1Cube = 333;
-    constsManipD.put2Cube = 223;
+    constsManipD.takeCube = 464;
+    constsManipD.put1Cube = 343;
+    constsManipD.put2Cube = 257;
     constsManipD.land1Cube = 52;
-    constsManipD.prepareToTakeFromLine = 405;
-    constsManipD.goOverCubes = 320;
-    constsManipD.goOverTwoCubes = 230;
-    constsManipD.takeFromStorage = 300;
-    constsManipD.carryCubes = 410;
-    constsManipD.prepareWater = 460;
-    constsManipD.hideWall = 485;
-    constsManipD.goFromStorageCubes = 420;
-    constsManipD.goFromBuiltTower = 215;
-    constsManipD.elementsGoIn = 350;
-    constsManipD.carryElements = 420;
+    constsManipD.prepareToTakeFromLine = 415;
+    constsManipD.goOverCubes = 330;
+    constsManipD.goOverTwoCubes = 260;
+    constsManipD.takeFromStorage = 310;
+    constsManipD.carryCubes = 420;
+    constsManipD.prepareWater = 470;
+    constsManipD.hideWall = 495;
+    constsManipD.goFromStorageCubes = 430;
+    constsManipD.goFromBuiltTower = 250;
+    constsManipD.elementsGoIn = 360;
+    constsManipD.carryElements = 430;
 
     IS_MANIPS_READY = true;
 }
